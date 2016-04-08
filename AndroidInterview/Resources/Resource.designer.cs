@@ -44,8 +44,11 @@ namespace AndroidInterview
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f050001
+			public const int details = 2131034113;
+			
 			// aapt resource value: 0x7f050000
-			public const int listView1 = 2131034112;
+			public const int titles_fragment = 2131034112;
 			
 			static Id()
 			{
@@ -61,7 +64,7 @@ namespace AndroidInterview
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int Main = 2130903040;
+			public const int activity_main = 2130903040;
 			
 			static Layout()
 			{
