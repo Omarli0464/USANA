@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Xml;
+using System.Xml.Linq;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -11,21 +14,27 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using System.IO;
+
 
 namespace AndroidInterview
 {
 	public class TitlesFragment : ListFragment
 	{
-		string[] values = new[] { "Android", "iPhone", "WindowsMobile",
-			"Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-			"Linux", "OS/2" };
+		//string[] values = new[] { "loading", "loading", "loading","loading","loading", "loading", "loading","loading"};
+
 		public int _currentPlayId = 0;
 		public bool _isDualPane = false;
-		public override void OnActivityCreated(Bundle savedInstanceState)
+		List<string> al = new List<string>();
+		List<string> bl = new List<string>();
+
+		public override async void OnActivityCreated(Bundle savedInstanceState)
 		{
 			base.OnActivityCreated(savedInstanceState);
-			var adapter = new ArrayAdapter<String>(Activity, Android.Resource.Layout.SimpleListItemChecked, values);
+			await DownloadHomepageAsync ();
+			var adapter = new ArrayAdapter<string>(Activity, Android.Resource.Layout.SimpleListItemChecked,al);
 			ListAdapter = adapter;
+			adapter.NotifyDataSetChanged ();
 			if (savedInstanceState != null)
 			{
 				
@@ -39,6 +48,51 @@ namespace AndroidInterview
 				ShowDetails(_currentPlayId);
 			}
 		}
+		public async Task DownloadHomepageAsync()
+		{
+			//List <FeedItem> feedItemsList  = new List<FeedItem>();
+			//List <String> al = new List<string> ();
+			var httpClient = new HttpClient(); // Xamarin supports HttpClient!
+
+			Task<string> contentsTask = httpClient.GetStringAsync("http://feeds.feedburner.com/androidcentral?format=xml"); // async method!
+
+
+			// await! control returns to the caller and the task continues to run on another thread
+			string contents = await contentsTask;
+			Console.WriteLine ("finish fetch contents");
+			//int exampleInt = contents.Length;
+			XDocument document =XDocument.Parse(contents);
+
+
+			foreach (XElement element in document.Descendants("item").Descendants("title"))
+			{
+				//Console.WriteLine (element.Value);
+				/*FeedItem item= new FeedItem();
+				foreach (XElement c in element.Descendants("title")) {
+					item.Title = c.Value;
+				}*/
+				al.Add(element.Value);
+				//Console.WriteLine (element.Value);
+
+				//al.Add(item);
+			}foreach (XElement element in document.Descendants("item").Descendants("ti"))
+			{
+				
+				bl.Add(element.Value);
+			
+			}
+
+
+
+
+
+
+			//return exampleInt;
+
+
+		}
+
+
 		public override void OnListItemClick(ListView l, View v, int position, long id)
 		{
 			ShowDetails(position);
@@ -75,6 +129,54 @@ namespace AndroidInterview
 				StartActivity(intent);
 			}
 		}
+
+		//background task download and parse the feed
+		/**
+		 * public async Task<int> DownloadHomepageAsync()
+		{
+			
+
+			var httpClient = new HttpClient(); // Xamarin supports HttpClient!
+
+			Task<string> contentsTask = httpClient.GetStringAsync("http://feeds.feedburner.com/androidcentral?format=xml"); // async method!
+
+
+			// await! control returns to the caller and the task continues to run on another thread
+			string contents = await contentsTask;
+			int exampleInt = contents.Length;
+			XDocument document =XDocument.Parse(contents);
+			try{
+				FeedItem item=null;
+				foreach (XElement element in document.Descendants("item").Descendants("title"))
+				{
+
+
+					Console.WriteLine (element);
+					if(element.Descendants("title")!=null){
+						Console.WriteLine ("statge1", element.Descendants("title").ToString());
+						item.Title=element.Descendants("title").ToString();
+					}
+					if(element.Descendants("link")!=null){
+						item.Link=element.Descendants("link").ToString();
+					}
+					if(element.Descendants("pubDate")!=null){
+						item.PubDate=Convert.ToDateTime(element.Descendants("pubDate").ToString());
+					}
+				}
+				feedItemsList.Add(item);
+			}
+			catch(Exception){
+				Console.WriteLine ("throwed");
+				throw;
+			}
+
+
+
+			return exampleInt;
+
+
+		}
+*/
 	}
 }
 
