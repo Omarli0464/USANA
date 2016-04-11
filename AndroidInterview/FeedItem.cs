@@ -12,9 +12,8 @@ using Android.Views;
 using Android.Widget;
 
 namespace AndroidInterview
-{
-	[Activity (Label = "FeedItem")]			
-	public class FeedItem 
+{	
+	public class FeedItem :Java.Lang.Object
 	{
 		public FeedItem()
 		{

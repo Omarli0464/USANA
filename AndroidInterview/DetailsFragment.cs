@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Net.Http;
+using System.Xml;
+using System.Xml.Linq;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -11,6 +13,9 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Android.Webkit;
+using System.Threading.Tasks;
+
 
 namespace AndroidInterview
 {
@@ -33,15 +38,13 @@ namespace AndroidInterview
 				// Currently in a layout without a container, so no reason to create our view.
 				return null;
 			}
-			var scroller = new ScrollView(Activity);
-			var text = new TextView(Activity);
-			var padding = Convert.ToInt32(TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Activity.Resources.DisplayMetrics));
-			text.SetPadding(padding, padding, padding, padding);
-			text.TextSize = 24;
-			text.Text = "wocaonima";
-			scroller.AddView(text);
-			return scroller;
+			var webView = new WebView(Activity);
+			webView.LoadUrl ();
+			return webView;
+
 		}
+
+
 	}
 }
 
