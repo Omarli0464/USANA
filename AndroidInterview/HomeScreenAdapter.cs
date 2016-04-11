@@ -26,8 +26,12 @@ namespace AndroidInterview
 		}
 		public override Java.Lang.Object  GetItem(int position) {  
 			return null;
-			// return items[position]; 
+			//return items[position]; 
 		}
+		public FeedItem getFeed(int position){
+			return items[position];
+		}
+
 		public override int Count {
 			get { return items.Count; }
 		}

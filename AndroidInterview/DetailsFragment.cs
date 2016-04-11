@@ -21,15 +21,21 @@ namespace AndroidInterview
 {
 	public class DetailsFragment : Fragment
 	{
-		public static DetailsFragment NewInstance(int playId)
+
+		public static DetailsFragment NewInstance(int playId, string url)
 		{
 			var detailsFrag = new DetailsFragment {Arguments = new Bundle()};
 			detailsFrag.Arguments.PutInt("current_play_id", playId);
+			detailsFrag.Arguments.PutString ("url", url);
 			return detailsFrag;
 		}
 		public int ShownPlayId
 		{
 			get { return Arguments.GetInt("current_play_id", 0); }
+		}
+		public string ShownUrl
+		{
+			get { return Arguments.GetString("url", null); }
 		}
 		public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
@@ -43,7 +49,7 @@ namespace AndroidInterview
 			var padding = Convert.ToInt32(TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Activity.Resources.DisplayMetrics));
 			text.SetPadding(padding, padding, padding, padding);
 			text.TextSize = 24;
-			text.Text = "wocaole";
+			text.Text = ShownUrl;
 			scroller.AddView(text);
 			return scroller;
 		}

@@ -24,17 +24,18 @@ namespace AndroidInterview
 
 		public int _currentPlayId = 0;
 		public bool _isDualPane = false;
-
+		//List <string> url= new List<string>();
+		List <FeedItem> al;
 		public override async void OnActivityCreated(Bundle savedInstanceState)
 		{
 			base.OnActivityCreated(savedInstanceState);
-			List <FeedItem> al= await DownloadHomepageAsync ();
+			 al= await DownloadHomepageAsync ();
 			/*foreach (FeedItem cao in al) {
 				values.Add (cao.Title);
 			}*/
 			//var adapter = new ArrayAdapter<string>(Activity, Android.Resource.Layout.SimpleListItemChecked,values.ToArray());
 			var adapter = new HomeScreenAdapter(this.Activity,al);
-			ListAdapter = adapter;
+			ListAdapter =adapter;
 			adapter.NotifyDataSetChanged ();
 			if (savedInstanceState != null)
 			{
@@ -46,7 +47,7 @@ namespace AndroidInterview
 			if (_isDualPane)
 			{
 				ListView.ChoiceMode =  ChoiceMode.Single;
-				ShowDetails(_currentPlayId);
+				ShowDetails(_currentPlayId,al[0]);
 			}
 		}
 		public async Task<List <FeedItem> > DownloadHomepageAsync ()
@@ -70,6 +71,7 @@ namespace AndroidInterview
 				item.Title = element.Descendants ("title").First ().Value;
 				item.Link = element.Descendants ("link").First ().Value;
 				item.PubDate = Convert.ToDateTime (element.Descendants ("pubDate").First ().Value);
+			//url.Add (element.Descendants ("link").First ().Value);
 				feedItemsList.Add (item);
 
 			}
@@ -84,10 +86,11 @@ namespace AndroidInterview
 
 		public override void OnListItemClick(ListView l, View v, int position, long id)
 		{
-
-			ShowDetails(position);
+			FeedItem a = al [position];
+			Console.WriteLine (a.Link);
+			ShowDetails(position,a);
 		}
-		private void ShowDetails(int playId)
+		private void ShowDetails(int playId,FeedItem feed)
 		{
 			_currentPlayId = playId;
 			if (_isDualPane)
@@ -96,13 +99,14 @@ namespace AndroidInterview
 				// Have the list highlight this item and show the data.
 				Console.WriteLine("comein");
 				ListView.SetItemChecked(playId, true);
+
 				// Check what fragment is shown, replace if needed.
 				var details = FragmentManager.FindFragmentById(Resource.Id.details) as DetailsFragment;
 				if (details == null || details.ShownPlayId != playId)
 				{
 					Console.WriteLine ("make new fragment");
 					// Make new fragment to show this selection.
-					details = DetailsFragment.NewInstance(playId);
+					details = DetailsFragment.NewInstance(playId,feed.Link);
 					// Execute a transaction, replacing any existing
 					// fragment with this one inside the frame.
 					var ft = FragmentManager.BeginTransaction();
@@ -117,7 +121,8 @@ namespace AndroidInterview
 				// the dialog fragment with selected text.
 				var intent = new Intent();
 				intent.SetClass(Activity, typeof (DetailsActivity));
-				intent.PutExtra("current_play_id", playId);
+				intent.PutExtra ("current_play_id", playId);
+				intent.PutExtra ("url",feed.Link);
 				StartActivity(intent);
 			}
 		}
