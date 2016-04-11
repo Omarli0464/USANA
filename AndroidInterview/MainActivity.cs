@@ -14,10 +14,10 @@ using Android.Util;
 namespace AndroidInterview
 {
 	[Activity (Label = "AndroidInterview", MainLauncher = true, Icon = "@mipmap/icon")]
-	public class MainActivity : Activity
+	public class MainActivity : Android.Support.V4.App.FragmentActivity
 	{
 		TitlesFragment frag;
-	//	SwipeRefreshLayout refresher;
+		SwipeRefreshLayout refresher;
 			protected override void  OnCreate(Bundle bundle)
 			{
 			base.OnCreate(bundle);
@@ -26,23 +26,23 @@ namespace AndroidInterview
 
 
 		
-			/*refresher = FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
+			refresher = FindViewById<SwipeRefreshLayout> (Resource.Id.refresher);
 			refresher.SetColorScheme (Resource.Color.primary_material_dark,
 				Resource.Color.material_blue_grey_950,
 				Resource.Color.ripple_material_light,
 				Resource.Color.abc_secondary_text_material_light);
 			refresher.Refresh += HandleRefresh;
-*/
+
 
 			Console.WriteLine ("Done");
 
 		}
-		/*async void HandleRefresh (object sender, EventArgs e)
+		async void HandleRefresh (object sender, EventArgs e)
 		{
 			await frag.DownloadHomepageAsync();
 			refresher.Refreshing = false;
 		}
-*/
+
 
 	}
 }

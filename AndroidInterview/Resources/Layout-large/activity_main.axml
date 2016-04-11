@@ -5,12 +5,17 @@
     android:layout_height="match_parent"
     android:minWidth="25px"
     android:minHeight="25px">
-    <fragment
-        class="AndroidInterview.TitlesFragment"
-        android:id="@+id/titles_fragment"
+    <AndroidInterview.ScrollChildSwipeRefreshLayout
+        android:id="@+id/refresher"
         android:layout_weight="1"
         android:layout_width="0px"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        <fragment
+            class="AndroidInterview.TitlesFragment"
+            android:id="@+id/titles_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </AndroidInterview.ScrollChildSwipeRefreshLayout>
     <FrameLayout
         android:id="@+id/details"
         android:layout_weight="1"
