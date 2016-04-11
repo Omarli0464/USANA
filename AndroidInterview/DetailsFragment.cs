@@ -38,10 +38,14 @@ namespace AndroidInterview
 				// Currently in a layout without a container, so no reason to create our view.
 				return null;
 			}
-			var webView = new WebView(Activity);
-			webView.LoadUrl ();
-			return webView;
-
+			var scroller = new ScrollView(Activity);
+			var text = new TextView(Activity);
+			var padding = Convert.ToInt32(TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Activity.Resources.DisplayMetrics));
+			text.SetPadding(padding, padding, padding, padding);
+			text.TextSize = 24;
+			text.Text = "wocaole";
+			scroller.AddView(text);
+			return scroller;
 		}
 
 

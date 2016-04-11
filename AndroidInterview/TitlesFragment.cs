@@ -24,9 +24,6 @@ namespace AndroidInterview
 
 		public int _currentPlayId = 0;
 		public bool _isDualPane = false;
-		//List <FeedItem> feedItemsList  = new List<FeedItem>();
-		List<string> values = new List<string>();
-		//List<string> bl = new List<string>();
 
 		public override async void OnActivityCreated(Bundle savedInstanceState)
 		{
@@ -38,13 +35,14 @@ namespace AndroidInterview
 			//var adapter = new ArrayAdapter<string>(Activity, Android.Resource.Layout.SimpleListItemChecked,values.ToArray());
 			var adapter = new HomeScreenAdapter(this.Activity,al);
 			ListAdapter = adapter;
-			//adapter.NotifyDataSetChanged ();
+			adapter.NotifyDataSetChanged ();
 			if (savedInstanceState != null)
 			{
 				_currentPlayId = savedInstanceState.GetInt("current_play_id", 0);
 			}
 			var detailsFrame = Activity.FindViewById<View>(Resource.Id.details);
 			_isDualPane = detailsFrame != null && detailsFrame.Visibility == ViewStates.Visible;
+			Console.WriteLine (_isDualPane);
 			if (_isDualPane)
 			{
 				ListView.ChoiceMode =  ChoiceMode.Single;
@@ -96,11 +94,13 @@ namespace AndroidInterview
 			{
 				// We can display everything in place with fragments.
 				// Have the list highlight this item and show the data.
+				Console.WriteLine("comein");
 				ListView.SetItemChecked(playId, true);
 				// Check what fragment is shown, replace if needed.
 				var details = FragmentManager.FindFragmentById(Resource.Id.details) as DetailsFragment;
 				if (details == null || details.ShownPlayId != playId)
 				{
+					Console.WriteLine ("make new fragment");
 					// Make new fragment to show this selection.
 					details = DetailsFragment.NewInstance(playId);
 					// Execute a transaction, replacing any existing
