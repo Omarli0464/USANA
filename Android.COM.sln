@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidInterview", "AndroidInterview\AndroidInterview.csproj", "{CBCD80C2-6C5D-4DC5-A704-82C73C48EDDE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Android.com", "AndroidInterview\Android.com.csproj", "{CBCD80C2-6C5D-4DC5-A704-82C73C48EDDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
