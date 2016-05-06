@@ -1,30 +1,23 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Net.Http;
-using System.Xml;
-using System.Xml.Linq;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
-using Android.Widget;
 using Android.Webkit;
-using System.Threading.Tasks;
-
+using Android.Net;
+using Java.IO;
 
 namespace AndroidInterview
 {
 	public class DetailsFragment : Fragment
 	{
-
-		public static DetailsFragment NewInstance(int playId, string url)
+         private FileCache cache;
+        //string path = @"Android/data/";
+        public static DetailsFragment NewInstance(int playId, string url)
 		{
-			var detailsFrag = new DetailsFragment {Arguments = new Bundle()};
+            var detailsFrag = new DetailsFragment {Arguments = new Bundle()};
 			detailsFrag.Arguments.PutInt("current_play_id", playId);
 			detailsFrag.Arguments.PutString ("url", url);
 			return detailsFrag;
@@ -39,20 +32,39 @@ namespace AndroidInterview
 		}
 		public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
-			if (container == null)
+            ConnectivityManager connectivityManager = (ConnectivityManager)this.Activity.GetSystemService(Context.ConnectivityService);
+            NetworkInfo activeConnection = connectivityManager.ActiveNetworkInfo;
+            bool isOnline = (activeConnection != null) && activeConnection.IsConnected;
+          
+             cache = new FileCache(this.Activity);
+           
+            var web = new WebView(Activity);
+            if (container == null)
 			{
 				// Currently in a layout without a container, so no reason to create our view.
 				return null;
 			}
-			var scroller = new ScrollView(Activity);
-			var text = new TextView(Activity);
-			var padding = Convert.ToInt32(TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Activity.Resources.DisplayMetrics));
-			text.SetPadding(padding, padding, padding, padding);
-			text.TextSize = 24;
-			text.Text = ShownUrl;
-			scroller.AddView(text);
-			return scroller;
-		}
+           
+            if (isOnline)
+            {
+                web.SetWebViewClient(new WebViewClient());
+                web.Settings.JavaScriptEnabled = true;
+                web.LoadUrl(ShownUrl);
+            }
+            else
+            {
+              File fl = cache.GetFile(ShownUrl);
+               BufferedReader br = new BufferedReader(new FileReader(fl));
+                StringBuilder sb = new StringBuilder();
+                while (br.ReadLine() != null) { sb.Append(br.ReadLine()); }
+                String html_value = sb.ToString();
+                
+                web.SetWebViewClient(new WebViewClient());
+                web.Settings.JavaScriptEnabled = true;
+                web.LoadData(html_value, "text/html", "UTF_8");
+            }
+            return web;
+        }
 
 
 	}
